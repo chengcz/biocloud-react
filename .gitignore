@@ -66,5 +66,5 @@ venv.bak/
 Thumbs.db
 
 *.xlsx
-
-
+_backup/
+.claude/

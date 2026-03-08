@@ -1,6 +1,6 @@
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Optional
 from datetime import datetime
-from sqlalchemy import String, DateTime, ForeignKey, Integer, Boolean, event
+from sqlalchemy import String, DateTime, ForeignKey, Integer, Boolean, event, text, update
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.models.base import BaseModel
@@ -72,11 +72,16 @@ def update_dept_path_on_insert(mapper, connection, target):
     if target.parent_id is None:
         dept_path = f".{target.id}."
     else:
-        parent_path = connection.execute(
-            f"SELECT dept_path FROM sys_dept WHERE id = {target.parent_id}"
-        ).scalar()
+        # 使用参数化查询防止 SQL 注入
+        result = connection.execute(
+            text("SELECT dept_path FROM sys_dept WHERE id = :parent_id"),
+            {"parent_id": target.parent_id}
+        )
+        parent_path = result.scalar() or "."
         dept_path = f"{parent_path}{target.id}."
 
+    # 使用参数化查询防止 SQL 注入
     connection.execute(
-        f"UPDATE sys_dept SET dept_path = '{dept_path}' WHERE id = {target.id}"
+        text("UPDATE sys_dept SET dept_path = :dept_path WHERE id = :id"),
+        {"dept_path": dept_path, "id": target.id}
     )
