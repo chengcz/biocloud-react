@@ -1,0 +1,56 @@
+version: "3.8"
+services:
+    postgres:
+        image: postgres:latest
+        restart: always
+        container_name: postgres
+        ports:
+            - "5432:5432"
+        volumes:
+            - /var/lib/postgresql/data
+        environment:
+            POSTGRES_USER: username
+            POSTGRES_PASSWORD: password
+            POSTGRES_DB: vector
+        networks:
+            - local
+    adminer:
+        image: adminer:latest
+        environment:
+            ADMINER_DEFAULT_SERVER: postgres
+        ports:
+            - 8080:8080
+        networks:
+            - local
+    backend:
+        networks:
+            - local
+        build: ./backend
+        restart: always
+        ports:
+            - "8000:8000"
+        depends_on:
+            - postgres
+        volumes:
+            - ./backend/src:/backend/src
+
+    frontend:
+        networks:
+            - local
+        build: ./frontend
+        command: npm run dev
+        restart: always
+        ports:
+            - "5173:5173"
+        depends_on:
+            - postgres
+            - backend
+        extra_hosts:
+            - "host.docker.internal:host-gateway"
+        volumes:
+            - ./frontend:/frontend
+            - /frontend/node_modules
+
+networks:
+    local:
+        driver: bridge
