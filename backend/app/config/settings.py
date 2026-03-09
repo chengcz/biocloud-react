@@ -12,7 +12,7 @@ class Settings(BaseSettings):
     DEBUG: bool = False
 
     # Database
-    DATABASE_URL: str = "postgresql+asyncpg://username:password@localhost:5432/vector"
+    DATABASE_URL: str = "sqlite+aiosqlite:///./biocloud.db"
 
     # JWT Settings
     SECRET_KEY: str = "your-secret-key-change-in-production"

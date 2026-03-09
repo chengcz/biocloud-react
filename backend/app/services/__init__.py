@@ -1,5 +1,5 @@
 """Services module"""
 
-from .llm import llm_router, detect_intent, generate_chat_response
+from .llm import llm_router, detect_tool_call, execute_tool_call, generate_chat_with_tools
 
-__all__ = ["llm_router", "detect_intent", "generate_chat_response"]
+__all__ = ["llm_router", "detect_tool_call", "execute_tool_call", "generate_chat_with_tools"]

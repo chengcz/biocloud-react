@@ -62,7 +62,7 @@ class MessageModel(BaseModel):
         comment="消息角色"
     )
     content: Mapped[str] = mapped_column(Text, nullable=False, comment="消息内容")
-    metadata: Mapped[Optional[dict]] = mapped_column(JSON, comment="元数据(分析参数等)")
+    meta_data: Mapped[Optional[dict]] = mapped_column(JSON, comment="元数据(分析参数等)")
 
     # 关系
     conversation: Mapped["ConversationModel"] = relationship(back_populates="messages")

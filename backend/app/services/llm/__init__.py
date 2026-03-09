@@ -1,15 +1,14 @@
 """LLM services"""
 
 from .router import llm_router, LLMRouter, LLMProvider
-from .intent import detect_intent, generate_chat_response, UserIntent, AnalysisType, IntentResult
+from .intent import detect_tool_call, execute_tool_call, generate_chat_with_tools, UserIntent
 
 __all__ = [
     "llm_router",
     "LLMRouter",
     "LLMProvider",
-    "detect_intent",
-    "generate_chat_response",
+    "detect_tool_call",
+    "execute_tool_call",
+    "generate_chat_with_tools",
     "UserIntent",
-    "AnalysisType",
-    "IntentResult",
 ]

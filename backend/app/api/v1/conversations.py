@@ -19,7 +19,7 @@ from app.schemas.conversation import (
     MessageCreate,
     MessageResponse,
 )
-from app.services.llm import detect_intent, generate_chat_response
+from app.services.llm import generate_chat_with_tools
 
 router = APIRouter(prefix="/conversations", tags=["Conversations"])
 
@@ -205,7 +205,7 @@ async def send_message(
 
         try:
             # Stream response from LLM
-            async for chunk in generate_chat_response(messages, model=conversation.model):
+            async for chunk in generate_chat_with_tools(messages, model=conversation.model):
                 assistant_content += chunk
                 # SSE format
                 yield f"data: {json.dumps({'content': chunk})}\n\n"
