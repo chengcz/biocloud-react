@@ -1,13 +1,12 @@
 """Pydantic schemas for user management"""
 
-from pydantic import BaseModel, EmailStr, Field
+from pydantic import BaseModel, EmailStr, Field, field_validator
 from typing import Optional, List
 from datetime import datetime
 
 
 class UserBase(BaseModel):
     """Base user schema"""
-    username: str = Field(..., min_length=3, max_length=30)
     name: str = Field(..., min_length=1, max_length=30)
     email: Optional[EmailStr] = None
     phone: Optional[str] = None
@@ -16,6 +15,7 @@ class UserBase(BaseModel):
 
 class UserCreate(UserBase):
     """User creation schema"""
+    username: str = Field(..., min_length=3, max_length=30)
     password: str = Field(..., min_length=6, max_length=100)
     dept_id: Optional[int] = None
     post_id: Optional[int] = None
@@ -37,10 +37,15 @@ class UserUpdate(BaseModel):
     status: Optional[str] = None
 
 
-class UserResponse(UserBase):
+class UserResponse(BaseModel):
     """User response schema"""
     id: int
+    username: str = Field(alias="user_name")
+    name: str
+    email: Optional[EmailStr] = None
+    phone: Optional[str] = None
     avatar: Optional[str] = None
+    sex: Optional[str] = None
     dept_id: Optional[int] = None
     post_id: Optional[int] = None
     leader_id: Optional[int] = None
@@ -51,6 +56,7 @@ class UserResponse(UserBase):
 
     class Config:
         from_attributes = True
+        populate_by_name = True
 
 
 class UserDetailResponse(UserResponse):
@@ -64,12 +70,13 @@ class UserDetailResponse(UserResponse):
 class UserBrief(BaseModel):
     """Brief user info for nested responses"""
     id: int
-    username: str
+    username: str = Field(alias="user_name")
     name: str
     avatar: Optional[str] = None
 
     class Config:
         from_attributes = True
+        populate_by_name = True
 
 
 class DeptBase(BaseModel):

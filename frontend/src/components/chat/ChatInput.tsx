@@ -1,16 +1,29 @@
-/** Chat input component */
+/** Chat input component - DeepSeek style */
 
-import React, { useState } from 'react';
-import { useChatStore } from '../../stores';
+import React, { useState, useRef, useEffect } from 'react';
+import { useChatStore, useAuthStore } from '../../stores';
+import { useNavigate } from 'react-router-dom';
 
 export const ChatInput: React.FC = () => {
   const { sendMessage, isStreaming } = useChatStore();
+  const { token } = useAuthStore();
+  const navigate = useNavigate();
   const [input, setInput] = useState('');
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
+
+  // Auto-resize textarea
+  useEffect(() => {
+    if (textareaRef.current) {
+      textareaRef.current.style.height = 'auto';
+      textareaRef.current.style.height = `${Math.min(textareaRef.current.scrollHeight, 200)}px`;
+    }
+  }, [input]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!input.trim() || isStreaming) return;
 
+    // Check if user is logged in for certain actions
     const message = input.trim();
     setInput('');
     await sendMessage(message);
@@ -25,24 +38,24 @@ export const ChatInput: React.FC = () => {
 
   return (
     <form onSubmit={handleSubmit} className="relative">
-      <div className="flex items-end gap-2 bg-gray-700 rounded-lg border border-gray-600 focus-within:border-blue-500 transition-colors">
+      <div className="relative flex items-end gap-2 bg-gray-100 dark:bg-gray-800 rounded-2xl border border-gray-200 dark:border-gray-700 focus-within:border-blue-500/50 focus-within:ring-2 focus-within:ring-blue-500/20 transition-all duration-200">
         <textarea
+          ref={textareaRef}
           value={input}
           onChange={(e) => setInput(e.target.value)}
           onKeyDown={handleKeyDown}
-          placeholder="输入消息... (Shift+Enter换行)"
+          placeholder={token ? "发送消息开始对话..." : "输入问题开始对话（部分功能需要登录）"}
           disabled={isStreaming}
           rows={1}
-          className="flex-1 bg-transparent px-4 py-3 text-white placeholder-gray-400 focus:outline-none resize-none max-h-40"
+          className="flex-1 bg-transparent px-4 py-3.5 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none resize-none max-h-52 text-sm leading-relaxed"
           style={{
-            minHeight: '48px',
-            height: 'auto',
+            minHeight: '52px',
           }}
         />
         <button
           type="submit"
           disabled={!input.trim() || isStreaming}
-          className="m-2 p-2 rounded-lg bg-blue-600 text-white hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+          className="m-2 p-2.5 rounded-xl bg-blue-600 text-white hover:bg-blue-500 disabled:bg-gray-200 dark:disabled:bg-gray-700 disabled:text-gray-400 dark:disabled:text-gray-500 transition-all duration-200"
         >
           {isStreaming ? (
             <svg

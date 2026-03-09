@@ -1,9 +1,8 @@
 from datetime import datetime
 from typing import Optional
-from sqlalchemy import String, DateTime, ForeignKey, Integer, Boolean, Enum as SQLEnum, event
-from sqlalchemy.orm import Mapped, mapped_column, relationship
+from sqlalchemy import String, DateTime, Integer
+from sqlalchemy.orm import Mapped, mapped_column
 from enum import Enum
-import uuid
 
 from app.config.database import Base
 

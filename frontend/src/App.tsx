@@ -1,4 +1,4 @@
-/** Main App component with routing */
+/** Main App component with routing - DeepSeek style */
 
 import React, { useEffect } from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
@@ -8,52 +8,27 @@ import Login from './pages/Login';
 import Register from './pages/Register';
 import './index.css';
 
-/** Protected route wrapper */
-const ProtectedRoute: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const { isAuthenticated, token } = useAuthStore();
-
-  if (!isAuthenticated && !token) {
-    return <Navigate to="/login" replace />;
-  }
-
-  return <>{children}</>;
-};
-
-/** Main layout with sidebar and chat */
+/** Main layout with sidebar and chat - DeepSeek style */
 const MainLayout: React.FC = () => {
-  const { toggleSidebar, theme, toggleTheme } = useUIStore();
+  const { token } = useAuthStore();
 
   return (
-    <div className="flex h-screen bg-gray-900 text-white">
+    <div className="flex h-screen bg-white dark:bg-gray-900 text-gray-900 dark:text-white transition-colors duration-200">
+      {/* Sidebar - collapsible */}
       <Sidebar />
+
+      {/* Main Chat Area */}
       <ChatContainer />
 
-      {/* Theme toggle button */}
-      <button
-        onClick={toggleTheme}
-        className="fixed bottom-4 right-4 p-2 rounded-lg bg-gray-700 hover:bg-gray-600 transition-colors"
-      >
-        {theme === 'dark' ? '☀️' : '🌙'}
-      </button>
-
-      {/* Sidebar toggle button */}
-      <button
-        onClick={toggleSidebar}
-        className="fixed top-4 right-4 p-2 rounded-lg bg-gray-700 hover:bg-gray-600 transition-colors"
-      >
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          className="h-5 w-5"
-          viewBox="0 0 20 20"
-          fill="currentColor"
+      {/* Login button (show when not logged in) */}
+      {!token && (
+        <a
+          href="/login"
+          className="fixed top-4 right-4 px-4 py-2 rounded-full bg-blue-600 hover:bg-blue-500 transition-colors text-sm font-medium shadow-lg text-white"
         >
-          <path
-            fillRule="evenodd"
-            d="M3 5a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 10a1 1 0 011-1h6a1 1 0 110 2H4a1 1 0 01-1-1zM3 15a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z"
-            clipRule="evenodd"
-          />
-        </svg>
-      </button>
+          登录
+        </a>
+      )}
     </div>
   );
 };
@@ -67,9 +42,13 @@ const App: React.FC = () => {
   useEffect(() => {
     const stored = localStorage.getItem('ui-storage');
     if (stored) {
-      const { state } = JSON.parse(stored);
-      if (state?.theme) {
-        setTheme(state.theme);
+      try {
+        const { state } = JSON.parse(stored);
+        if (state?.theme) {
+          setTheme(state.theme);
+        }
+      } catch {
+        // Ignore parse errors
       }
     }
   }, [setTheme]);
@@ -86,14 +65,7 @@ const App: React.FC = () => {
       <Routes>
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
-        <Route
-          path="/"
-          element={
-            <ProtectedRoute>
-              <MainLayout />
-            </ProtectedRoute>
-          }
-        />
+        <Route path="/" element={<MainLayout />} />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </BrowserRouter>
