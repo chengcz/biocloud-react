@@ -1,8 +1,8 @@
 /** Sidebar component - ChatGPT style conversation list */
 
 import React from 'react';
-import { useChatStore, useUIStore } from '../stores';
-import { cn } from '../utils/cn';
+import { useChatStore, useUIStore } from '../../stores';
+import { cn } from '../../utils/cn';
 
 export const Sidebar: React.FC = () => {
   const {

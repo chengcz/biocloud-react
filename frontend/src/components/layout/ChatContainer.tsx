@@ -1,7 +1,7 @@
 /** Main chat container component */
 
 import React, { useRef, useEffect, useState } from 'react';
-import { useChatStore } from '../stores';
+import { useChatStore } from '../../stores';
 import { MessageItem } from '../chat/MessageItem';
 import { ChatInput } from '../chat/ChatInput';
 import { StreamingMessage } from '../chat/StreamingMessage';
