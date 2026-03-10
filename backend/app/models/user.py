@@ -1,6 +1,6 @@
 from typing import TYPE_CHECKING, Optional
 from datetime import datetime
-from sqlalchemy import String, DateTime, ForeignKey, Integer, Boolean, Table, Column, event
+from sqlalchemy import String, DateTime, ForeignKey, Integer, Boolean, event
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.models.base import BaseModel

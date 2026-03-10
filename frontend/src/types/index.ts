@@ -20,13 +20,5 @@ export interface TokenResponse {
   expires_in: number;
 }
 
-export interface AuthState {
-  user: import('./user').User | null;
-  token: string | null;
-  refreshToken: string | null;
-  isAuthenticated: boolean;
-  isLoading: boolean;
-}
-
 export * from './user';
 export * from './conversation';

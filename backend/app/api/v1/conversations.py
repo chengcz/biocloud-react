@@ -3,7 +3,7 @@
 from fastapi import APIRouter, Depends, HTTPException, status
 from fastapi.responses import StreamingResponse
 from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy import select, func, update
+from sqlalchemy import select
 from sqlalchemy.orm import selectinload
 from datetime import datetime
 from typing import List

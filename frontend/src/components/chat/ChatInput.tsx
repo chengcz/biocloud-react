@@ -2,12 +2,10 @@
 
 import React, { useState, useRef, useEffect } from 'react';
 import { useChatStore, useAuthStore } from '../../stores';
-import { useNavigate } from 'react-router-dom';
 
 export const ChatInput: React.FC = () => {
   const { sendMessage, isStreaming } = useChatStore();
   const { token } = useAuthStore();
-  const navigate = useNavigate();
   const [input, setInput] = useState('');
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 

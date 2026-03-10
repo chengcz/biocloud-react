@@ -1,6 +1,6 @@
 """Pydantic schemas for user management"""
 
-from pydantic import BaseModel, EmailStr, Field, field_validator
+from pydantic import BaseModel, EmailStr, Field
 from typing import Optional, List
 from datetime import datetime
 

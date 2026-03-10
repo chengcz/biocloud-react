@@ -3,15 +3,6 @@
 from abc import ABC, abstractmethod
 from typing import Dict, Any, Optional, List
 from pydantic import BaseModel, Field
-from enum import Enum
-
-
-class AnalysisStatus(str, Enum):
-    """Analysis status"""
-    PENDING = "pending"
-    RUNNING = "running"
-    COMPLETED = "completed"
-    FAILED = "failed"
 
 
 class ToolParameter(BaseModel):
