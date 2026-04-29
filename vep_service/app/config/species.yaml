@@ -1,0 +1,31 @@
+# Species Configuration for VEP Annotation Service
+# Reference: vep_service/ref/vep_service/settings/base.py
+
+species:
+  - name: GRCh37
+    assembly: GRCh37
+    alias: hg19
+    description: Human genome assembly GRCh37 (hg19)
+    vep_cache_dir: /data/vep_data/GRCh37
+    fasta_file: /data/vep_data/GRCh37/GRCh37.fa
+    gff_file: /data/vep_data/GRCh37/GRCh37.gff3
+    enabled: true
+
+  - name: GRCh38
+    assembly: GRCh38
+    alias: hg38
+    description: Human genome assembly GRCh38 (hg38)
+    vep_cache_dir: /data/vep_data/GRCh38
+    fasta_file: /data/vep_data/GRCh38/GRCh38.fa
+    gff_file: /data/vep_data/GRCh38/GRCh38.gff3
+    enabled: true
+
+defaults:
+  distance: 500
+  output_format: json
+  hgvs: true
+  hgvsg: true
+  symbol: true
+  domains: true
+  protein: true
+  numbers: true
