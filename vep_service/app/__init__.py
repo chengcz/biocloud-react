@@ -1,1 +1,0 @@
-"""VEP Service Package"""

@@ -11,9 +11,9 @@ from contextlib import asynccontextmanager
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from app.config.settings import settings
-from app.config.database import init_db
-from app.api.vep import router as vep_router
+from config.settings import settings
+from config.database import init_db
+from api.vep import router as vep_router
 
 logger = logging.getLogger(__name__)
 

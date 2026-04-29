@@ -7,7 +7,7 @@ NO create_by, NO user_id - this is an open access service.
 from datetime import datetime
 from sqlalchemy import Integer, String, DateTime
 from sqlalchemy.orm import Mapped, mapped_column
-from app.config.database import Base
+from config.database import Base
 
 
 class BaseModel(Base):

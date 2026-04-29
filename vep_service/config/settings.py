@@ -25,7 +25,7 @@ class Settings(BaseSettings):
 
     # VEP Configuration
     VEP_DATA_DIR: str = "/data/vep_data"
-    SPECIES_CONFIG_PATH: str = "config/species.yaml"
+    SPECIES_CONFIG_PATH: str = "species.yaml"  # Now in root directory
     VEP_TIMEOUT: int = 300  # 5 minutes
     MAX_VCF_SIZE: int = 50 * 1024 * 1024  # 50MB
     VEP_CACHE_RESULTS: bool = True

@@ -6,7 +6,7 @@ Open access - no user validation required.
 
 from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession, async_sessionmaker
 from sqlalchemy.orm import declarative_base
-from app.config.settings import settings
+from config.settings import settings
 
 # Create async engine
 engine = create_async_engine(

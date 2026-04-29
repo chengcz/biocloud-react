@@ -3,7 +3,7 @@
 import pytest
 import tempfile
 import os
-from app.services.vcf_parser import (
+from services.vcf_parser import (
     parse_vcf_string,
     parse_info_field,
     extract_variants_from_vcf,

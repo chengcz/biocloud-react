@@ -15,10 +15,10 @@ from fastapi import APIRouter, Depends, HTTPException, status, BackgroundTasks, 
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select
 
-from app.api.deps import get_db
-from app.models.annotation import AnnotationResult
-from app.models.task import VepTask, VepTaskStatus
-from app.schemas.vep import (
+from api.deps import get_db
+from models.annotation import AnnotationResult
+from models.task import VepTask, VepTaskStatus
+from schemas.vep import (
     AnnotateRequest,
     AnnotateResponse,
     VariantAnnotation,
@@ -27,14 +27,14 @@ from app.schemas.vep import (
     SpeciesInfo,
     SpeciesListResponse,
 )
-from app.services.vep_runner import (
+from services.vep_runner import (
     load_species_config,
     get_species_config,
     run_vep_annotation_async,
     compute_variant_hash,
 )
-from app.services.vcf_parser import extract_variants_from_vcf, validate_vcf_format
-from app.config.settings import settings
+from services.vcf_parser import extract_variants_from_vcf, validate_vcf_format
+from config.settings import settings
 
 router = APIRouter(prefix="/vep", tags=["VEP Annotation"])
 

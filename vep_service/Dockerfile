@@ -27,9 +27,14 @@ COPY requirements.txt .
 # Install Python dependencies
 RUN pip3 install --no-cache-dir -r requirements.txt
 
-# Copy application code
-COPY app/ ./app/
+# Copy application code (flat structure - no app/ subdirectory)
+COPY api/ ./api/
+COPY models/ ./models/
+COPY schemas/ ./schemas/
+COPY services/ ./services/
 COPY config/ ./config/
+COPY main.py .
+COPY species.yaml .
 
 # Create directories for uploads and temp files
 RUN mkdir -p /tmp/vep_service/uploads /data/vep_data
@@ -45,5 +50,5 @@ VOLUME ["/data/vep_data"]
 # Expose port
 EXPOSE 8001
 
-# Run the application
-CMD ["python3", "-m", "uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8001"]
+# Run the application (flat structure: main:app, not app.main:app)
+CMD ["python3", "-m", "uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8001"]

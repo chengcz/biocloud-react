@@ -1,7 +1,7 @@
 """Tests for VEP Runner Service"""
 
 import pytest
-from app.services.vep_runner import (
+from services.vep_runner import (
     load_species_config,
     get_species_config,
     build_vep_command,

@@ -6,7 +6,7 @@ NO user_id - annotations are shared globally across all clients.
 
 from sqlalchemy import String, Integer, Text, JSON, UniqueConstraint
 from sqlalchemy.orm import Mapped, mapped_column
-from app.models.base import BaseModel
+from models.base import BaseModel
 
 
 class AnnotationResult(BaseModel):

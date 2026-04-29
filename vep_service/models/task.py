@@ -10,7 +10,7 @@ from typing import Optional
 from enum import Enum
 from sqlalchemy import String, Integer, Text, JSON, DateTime
 from sqlalchemy.orm import Mapped, mapped_column
-from app.models.base import BaseModel
+from models.base import BaseModel
 
 
 class VepTaskStatus(str, Enum):

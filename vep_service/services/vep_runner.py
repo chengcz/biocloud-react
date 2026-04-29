@@ -16,7 +16,7 @@ from typing import Any
 
 import yaml
 
-from app.config.settings import settings
+from config.settings import settings
 
 logger = logging.getLogger(__name__)
 
@@ -30,7 +30,7 @@ def load_species_config() -> dict:
     """
     config_path = Path(settings.SPECIES_CONFIG_PATH)
     if not config_path.exists():
-        config_path = Path(__file__).parent.parent / "config" / "species.yaml"
+        config_path = Path(__file__).parent.parent / "species.yaml"  # Root directory
 
     if not config_path.exists():
         logger.warning(f"Species config not found at {config_path}, using defaults")

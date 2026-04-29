@@ -5,7 +5,7 @@ Open access service - no user validation required.
 """
 
 from sqlalchemy.ext.asyncio import AsyncSession
-from app.config.database import get_db as _get_db
+from config.database import get_db as _get_db
 
 
 async def get_db() -> AsyncSession:
