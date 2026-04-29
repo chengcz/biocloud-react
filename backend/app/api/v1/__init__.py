@@ -5,6 +5,7 @@ from fastapi import APIRouter
 from .auth import router as auth_router
 from .users import router as user_router, dept_router, role_router
 from .conversations import router as conversation_router
+from .vep import router as vep_router
 
 api_router = APIRouter()
 
@@ -14,3 +15,4 @@ api_router.include_router(user_router)
 api_router.include_router(dept_router)
 api_router.include_router(role_router)
 api_router.include_router(conversation_router)
+api_router.include_router(vep_router)

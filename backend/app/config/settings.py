@@ -29,6 +29,13 @@ class Settings(BaseSettings):
     UPLOAD_DIR: str = "/tmp/biocloud/uploads"
     MAX_UPLOAD_SIZE: int = 100 * 1024 * 1024  # 100MB
 
+    # VEP Annotation Settings
+    VEP_DATA_DIR: str = "/data/vep_data"
+    SPECIES_CONFIG_PATH: str = "config/species.yaml"
+    VEP_TIMEOUT: int = 300  # 5 minutes
+    MAX_VCF_SIZE: int = 50 * 1024 * 1024  # 50MB for VCF files
+    VEP_CACHE_RESULTS: bool = True  # Cache annotation results in database
+
     # CORS
     CORS_ORIGINS: list[str] = ["http://localhost:5173", "http://127.0.0.1:5173"]
 
