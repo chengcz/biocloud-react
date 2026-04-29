@@ -20,7 +20,8 @@ services:
       - DEBUG=false
     volumes:
       - ./data/vep_data:/data/vep_data:ro
-      - ./app/config:/app/config:ro
+      - ./config:/app/config:ro
+      - ./species.yaml:/app/species.yaml:ro
     depends_on:
       postgres:
         condition: service_healthy

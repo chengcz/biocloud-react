@@ -29,8 +29,6 @@ def load_species_config() -> dict:
         dict: Species configuration with GRCh37 and GRCh38 settings
     """
     config_path = Path(settings.SPECIES_CONFIG_PATH)
-    if not config_path.exists():
-        config_path = Path(__file__).parent.parent / "species.yaml"  # Root directory
 
     if not config_path.exists():
         logger.warning(f"Species config not found at {config_path}, using defaults")
