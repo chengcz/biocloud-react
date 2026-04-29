@@ -4,8 +4,6 @@ from .dept import DeptModel
 from .role import RoleModel, PermissionModel, role_to_user, role_to_permission, role_to_dept
 from .conversation import ConversationModel, MessageModel, MessageRole
 from .analysis import AnalysisModel, UploadedFileModel, AnalysisStatus, AnalysisType
-from .annotation import AnnotationResult
-from .vep_task import VepTask, VepTaskStatus
 
 __all__ = [
     "BaseModel",
@@ -25,7 +23,4 @@ __all__ = [
     "UploadedFileModel",
     "AnalysisStatus",
     "AnalysisType",
-    "AnnotationResult",
-    "VepTask",
-    "VepTaskStatus",
 ]

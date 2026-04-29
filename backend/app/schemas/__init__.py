@@ -33,16 +33,6 @@ from .user import (
     PermissionCreate,
     PermissionResponse,
 )
-from .vep import (
-    VariantRequest,
-    AnnotateRequest,
-    VariantAnnotation,
-    AnnotateResponse,
-    TaskCreateResponse,
-    TaskStatusResponse,
-    SpeciesInfo,
-    SpeciesListResponse,
-)
 
 __all__ = [
     # Auth
@@ -82,13 +72,4 @@ __all__ = [
     "PermissionBase",
     "PermissionCreate",
     "PermissionResponse",
-    # VEP
-    "VariantRequest",
-    "AnnotateRequest",
-    "VariantAnnotation",
-    "AnnotateResponse",
-    "TaskCreateResponse",
-    "TaskStatusResponse",
-    "SpeciesInfo",
-    "SpeciesListResponse",
 ]
