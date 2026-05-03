@@ -35,6 +35,25 @@ class AnnotateRequest(BaseModel):
     )
 
 
+class StructuredAnnotation(BaseModel):
+    """Structured VEP annotation fields extracted from transcript_consequences"""
+    consequence: Optional[str] = Field(None, description="Most severe consequence term")
+    codons: Optional[str] = Field(None, description="Reference and variant codons (e.g., aTg/aCg)")
+    gene_id: Optional[str] = Field(None, description="Ensembl Gene ID (e.g., ENSG00000178821)")
+    gene_symbol: Optional[str] = Field(None, description="Gene symbol/name (e.g., BRCA1)")
+    transcript_id: Optional[str] = Field(None, description="Ensembl Transcript ID (e.g., ENST00000310991)")
+    exon: Optional[str] = Field(None, description="Exon number out of total (e.g., 1/5)")
+    intron: Optional[str] = Field(None, description="Intron number out of total (e.g., 2/4)")
+    hgvsc: Optional[str] = Field(None, description="HGVS cDNA notation (e.g., ENST00000310991.8:c.422T>C)")
+    hgvsp: Optional[str] = Field(None, description="HGVS protein notation (e.g., ENSP00000311122.3:p.Met141Thr)")
+    impact: Optional[str] = Field(None, description="Impact level: HIGH, MODERATE, LOW, MODIFIER")
+    biotype: Optional[str] = Field(None, description="Transcript biotype (e.g., protein_coding)")
+    protein_id: Optional[str] = Field(None, description="Ensembl Protein ID (e.g., ENSP00000311122)")
+    sift_score: Optional[float] = Field(None, description="SIFT score (0.0-1.0, lower = more damaging)")
+    polyphen_score: Optional[float] = Field(None, description="PolyPhen score (0.0-1.0, higher = more damaging)")
+    amino_acids: Optional[str] = Field(None, description="Reference/variant amino acids (e.g., M/T)")
+
+
 class VariantAnnotation(BaseModel):
     """Single variant annotation result"""
     chrom: str
@@ -42,7 +61,10 @@ class VariantAnnotation(BaseModel):
     ref: str
     alt: str
     species: str
-    annotation: dict = Field(description="VEP annotation JSON")
+    annotation: dict = Field(description="Full VEP annotation JSON (backward compatibility)")
+    structured: Optional[StructuredAnnotation] = Field(
+        None, description="Structured annotation fields extracted from VEP result"
+    )
     cached: bool = Field(description="Whether result was from cache")
 
 

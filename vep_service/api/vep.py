@@ -22,6 +22,7 @@ from schemas.vep import (
     AnnotateRequest,
     AnnotateResponse,
     VariantAnnotation,
+    StructuredAnnotation,
     TaskCreateResponse,
     TaskStatusResponse,
     SpeciesInfo,
@@ -32,6 +33,7 @@ from services.vep_runner import (
     get_species_config,
     run_vep_annotation_async,
     compute_variant_hash,
+    extract_most_severe_consequence,
 )
 from services.vcf_parser import extract_variants_from_vcf, validate_vcf_format
 from config.settings import settings
@@ -85,6 +87,7 @@ async def annotate_background_task(
                 cached = cached_annotations.get(variant_hash)
 
                 if not cached:
+                    extracted = extract_most_severe_consequence(vep_res)
                     new_annotations.append(AnnotationResult(
                         variant_hash=variant_hash,
                         species=species,
@@ -92,6 +95,23 @@ async def annotate_background_task(
                         pos=variant["pos"],
                         ref=variant["ref"],
                         alt=variant["alt"],
+                        # VEP extracted fields
+                        consequence=extracted["consequence"],
+                        codons=extracted["codons"],
+                        gene_id=extracted["gene_id"],
+                        gene_symbol=extracted["gene_symbol"],
+                        transcript_id=extracted["transcript_id"],
+                        exon=extracted["exon"],
+                        intron=extracted["intron"],
+                        hgvsc=extracted["hgvsc"],
+                        hgvsp=extracted["hgvsp"],
+                        impact=extracted["impact"],
+                        biotype=extracted["biotype"],
+                        protein_id=extracted["protein_id"],
+                        sift_score=extracted["sift_score"],
+                        polyphen_score=extracted["polyphen_score"],
+                        amino_acids=extracted["amino_acids"],
+                        # Keep full JSON for backup
                         annotation_json=vep_res,
                         status="active",
                         del_flag="0"
@@ -203,6 +223,23 @@ async def annotate_variants(
                 alt=variant["alt"],
                 species=species,
                 annotation=cached.annotation_json,
+                structured=StructuredAnnotation(
+                    consequence=cached.consequence,
+                    codons=cached.codons,
+                    gene_id=cached.gene_id,
+                    gene_symbol=cached.gene_symbol,
+                    transcript_id=cached.transcript_id,
+                    exon=cached.exon,
+                    intron=cached.intron,
+                    hgvsc=cached.hgvsc,
+                    hgvsp=cached.hgvsp,
+                    impact=cached.impact,
+                    biotype=cached.biotype,
+                    protein_id=cached.protein_id,
+                    sift_score=cached.sift_score,
+                    polyphen_score=cached.polyphen_score,
+                    amino_acids=cached.amino_acids,
+                ),
                 cached=True
             ))
             cached_count += 1
@@ -219,6 +256,7 @@ async def annotate_variants(
             for j, vep_res in enumerate(vep_results):
                 i, variant, variant_hash = variants_to_annotate[j]
 
+                extracted = extract_most_severe_consequence(vep_res)
                 new_annotations.append(AnnotationResult(
                     variant_hash=variant_hash,
                     species=species,
@@ -226,6 +264,23 @@ async def annotate_variants(
                     pos=variant["pos"],
                     ref=variant["ref"],
                     alt=variant["alt"],
+                    # VEP extracted fields
+                    consequence=extracted["consequence"],
+                    codons=extracted["codons"],
+                    gene_id=extracted["gene_id"],
+                    gene_symbol=extracted["gene_symbol"],
+                    transcript_id=extracted["transcript_id"],
+                    exon=extracted["exon"],
+                    intron=extracted["intron"],
+                    hgvsc=extracted["hgvsc"],
+                    hgvsp=extracted["hgvsp"],
+                    impact=extracted["impact"],
+                    biotype=extracted["biotype"],
+                    protein_id=extracted["protein_id"],
+                    sift_score=extracted["sift_score"],
+                    polyphen_score=extracted["polyphen_score"],
+                    amino_acids=extracted["amino_acids"],
+                    # Keep full JSON for backup
                     annotation_json=vep_res,
                     status="active",
                     del_flag="0"
@@ -238,6 +293,7 @@ async def annotate_variants(
                     alt=variant["alt"],
                     species=species,
                     annotation=vep_res,
+                    structured=StructuredAnnotation(**extracted),
                     cached=False
                 ))
                 annotated_count += 1
@@ -406,6 +462,23 @@ async def get_task_status(
                     alt=cached.alt,
                     species=cached.species,
                     annotation=cached.annotation_json,
+                    structured=StructuredAnnotation(
+                        consequence=cached.consequence,
+                        codons=cached.codons,
+                        gene_id=cached.gene_id,
+                        gene_symbol=cached.gene_symbol,
+                        transcript_id=cached.transcript_id,
+                        exon=cached.exon,
+                        intron=cached.intron,
+                        hgvsc=cached.hgvsc,
+                        hgvsp=cached.hgvsp,
+                        impact=cached.impact,
+                        biotype=cached.biotype,
+                        protein_id=cached.protein_id,
+                        sift_score=cached.sift_score,
+                        polyphen_score=cached.polyphen_score,
+                        amino_acids=cached.amino_acids,
+                    ),
                     cached=True
                 ))
 

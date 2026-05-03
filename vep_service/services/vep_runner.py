@@ -175,6 +175,82 @@ def compute_variant_hash(chrom: str, pos: int, ref: str, alt: str, species: str)
     return hashlib.sha256(variant_str.encode()).hexdigest()
 
 
+IMPACT_ORDER = {"high": 0, "moderate": 1, "low": 2, "modifier": 3}
+
+
+def extract_most_severe_consequence(vep_result: dict) -> dict:
+    """
+    Extract fields from the most severe transcript consequence.
+
+    Args:
+        vep_result: Single VEP annotation result (JSON dict)
+
+    Returns:
+        dict: Extracted fields for database columns
+    """
+    extracted = {
+        "consequence": None,
+        "codons": None,
+        "gene_id": None,
+        "gene_symbol": None,
+        "transcript_id": None,
+        "exon": None,
+        "intron": None,
+        "hgvsc": None,
+        "hgvsp": None,
+        "impact": None,
+        "biotype": None,
+        "protein_id": None,
+        "sift_score": None,
+        "polyphen_score": None,
+        "amino_acids": None,
+    }
+
+    # Get most_severe_consequence from top-level
+    if "most_severe_consequence" in vep_result:
+        extracted["consequence"] = vep_result["most_severe_consequence"]
+
+    # Find most severe transcript consequence
+    transcript_consequences = vep_result.get("transcript_consequences", [])
+    if not transcript_consequences:
+        return extracted
+
+    # Sort by impact (most severe first)
+    def get_impact_rank(tc):
+        impact = tc.get("impact", "modifier").lower()
+        return IMPACT_ORDER.get(impact, 3)
+
+    sorted_consequences = sorted(transcript_consequences, key=get_impact_rank)
+    most_severe = sorted_consequences[0]
+
+    # Extract fields from most severe transcript consequence
+    extracted["gene_id"] = most_severe.get("gene_id")
+    extracted["gene_symbol"] = most_severe.get("gene_symbol")
+    extracted["transcript_id"] = most_severe.get("transcript_id")
+    extracted["exon"] = most_severe.get("exon")
+    extracted["intron"] = most_severe.get("intron")
+    extracted["hgvsc"] = most_severe.get("hgvsc")
+    extracted["hgvsp"] = most_severe.get("hgvsp")
+    extracted["codons"] = most_severe.get("codons")
+    extracted["amino_acids"] = most_severe.get("amino_acids")
+    extracted["impact"] = most_severe.get("impact")
+    extracted["biotype"] = most_severe.get("biotype")
+    extracted["protein_id"] = most_severe.get("protein_id")
+
+    # SIFT and PolyPhen scores
+    if "sift_score" in most_severe:
+        extracted["sift_score"] = float(most_severe["sift_score"])
+    if "polyphen_score" in most_severe:
+        extracted["polyphen_score"] = float(most_severe["polyphen_score"])
+
+    # If consequence_terms exists, use first one as primary
+    consequence_terms = most_severe.get("consequence_terms", [])
+    if consequence_terms:
+        extracted["consequence"] = consequence_terms[0]
+
+    return extracted
+
+
 async def run_vep_annotation_async(
     variants: list[dict[str, Any]],
     species: str = "GRCh37"

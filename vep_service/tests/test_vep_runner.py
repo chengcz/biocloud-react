@@ -7,6 +7,7 @@ from services.vep_runner import (
     build_vep_command,
     compute_variant_hash,
     generate_variant_input,
+    extract_most_severe_consequence,
 )
 
 
@@ -71,3 +72,89 @@ def test_build_vep_command():
     assert "vep" in cmd
     assert "--force" in cmd
     assert "--no_stats" in cmd
+
+
+def test_extract_most_severe_consequence_basic():
+    """Test basic field extraction from VEP result"""
+    vep_result = {
+        "most_severe_consequence": "missense_variant",
+        "transcript_consequences": [
+            {
+                "gene_id": "ENSG00000178821",
+                "gene_symbol": "BRCA1",
+                "transcript_id": "ENST00000310991",
+                "consequence_terms": ["missense_variant"],
+                "impact": "MODERATE",
+                "codons": "aTg/aCg",
+                "hgvsc": "ENST00000310991.8:c.422T>C",
+                "hgvsp": "ENSP00000311122.3:p.Met141Thr",
+                "exon": "1/5",
+                "sift_score": 0.22,
+                "polyphen_score": 0.001,
+            }
+        ]
+    }
+
+    extracted = extract_most_severe_consequence(vep_result)
+
+    assert extracted["consequence"] == "missense_variant"
+    assert extracted["gene_id"] == "ENSG00000178821"
+    assert extracted["gene_symbol"] == "BRCA1"
+    assert extracted["codons"] == "aTg/aCg"
+    assert extracted["hgvsc"] == "ENST00000310991.8:c.422T>C"
+    assert extracted["hgvsp"] == "ENSP00000311122.3:p.Met141Thr"
+    assert extracted["exon"] == "1/5"
+    assert extracted["sift_score"] == 0.22
+    assert extracted["impact"] == "MODERATE"
+
+
+def test_extract_most_severe_consequence_empty():
+    """Test extraction with empty transcript consequences"""
+    vep_result = {
+        "most_severe_consequence": "intergenic_variant",
+        "transcript_consequences": []
+    }
+
+    extracted = extract_most_severe_consequence(vep_result)
+
+    assert extracted["consequence"] == "intergenic_variant"
+    assert extracted["gene_id"] is None
+    assert extracted["transcript_id"] is None
+
+
+def test_extract_most_severe_consequence_impact_ordering():
+    """Test that most severe impact is selected"""
+    vep_result = {
+        "transcript_consequences": [
+            {"impact": "LOW", "gene_symbol": "GENE_LOW"},
+            {"impact": "HIGH", "gene_symbol": "GENE_HIGH"},
+            {"impact": "MODERATE", "gene_symbol": "GENE_MOD"},
+        ]
+    }
+
+    extracted = extract_most_severe_consequence(vep_result)
+
+    # HIGH impact should be selected
+    assert extracted["impact"] == "HIGH"
+    assert extracted["gene_symbol"] == "GENE_HIGH"
+
+
+def test_extract_most_severe_consequence_missing_fields():
+    """Test extraction with partially missing VEP fields"""
+    vep_result = {
+        "transcript_consequences": [
+            {
+                "gene_id": "ENSG000001",
+                "gene_symbol": "TESTGENE",
+                # Missing: transcript_id, codons, hgvsc, etc.
+            }
+        ]
+    }
+
+    extracted = extract_most_severe_consequence(vep_result)
+
+    assert extracted["gene_id"] == "ENSG000001"
+    assert extracted["gene_symbol"] == "TESTGENE"
+    assert extracted["transcript_id"] is None
+    assert extracted["codons"] is None
+    assert extracted["hgvsc"] is None
