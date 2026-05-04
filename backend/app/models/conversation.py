@@ -4,6 +4,7 @@ from sqlalchemy import String, DateTime, ForeignKey, Integer, Text, JSON, Enum a
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from enum import Enum
 
+from app.config import settings
 from app.models.base import BaseModel
 
 
@@ -26,7 +27,7 @@ class ConversationModel(BaseModel):
         comment="用户ID"
     )
     title: Mapped[str] = mapped_column(String(255), default="新对话", comment="对话标题")
-    model: Mapped[str] = mapped_column(String(50), default="claude", comment="使用的LLM模型")
+    model: Mapped[str] = mapped_column(String(50), default=settings.CONVERSATION_DEFAULT_MODEL, comment="使用的LLM模型")
     is_archived: Mapped[bool] = mapped_column(default=False, comment="是否归档")
     last_message_at: Mapped[Optional[datetime]] = mapped_column(
         DateTime,

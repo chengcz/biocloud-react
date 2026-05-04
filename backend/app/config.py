@@ -19,14 +19,17 @@ class Settings(BaseSettings):
 
 
     # Database connection settings
-    DB_HOST: getenv("DB_HOST", "localhost")
-    DB_PORT: getenv("DB_PORT", "5434")
-    DB_NAME: getenv("DB_NAME", "competitive_intelligence")
-    DB_USER: getenv("DB_USER", "postgres")
-    DB_PASSWORD: getenv("DB_PASSWORD", "postgres")
+    DB_HOST: str = getenv("DB_HOST", "localhost")
+    DB_PORT: str = getenv("DB_PORT", "5434")
+    DB_NAME: str = getenv("DB_NAME", "pg-biocloud")
+    DB_USER: str = getenv("DB_USER", "postgres")
+    DB_PASSWORD: str = getenv("DB_PASSWORD", "postgres")
 
-    # Create database URL
-    DATABASE_URL: f"postgresql://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:{DB_PORT}/{DB_NAME}"
+    # Create database URL (computed from DB settings)
+    @property
+    def DATABASE_URL(self) -> str:
+        """Compute database URL from connection settings (async driver)"""
+        return f"postgresql+asyncpg://{self.DB_USER}:{self.DB_PASSWORD}@{self.DB_HOST}:{self.DB_PORT}/{self.DB_NAME}"
 
 
     # JWT Settings
@@ -39,6 +42,18 @@ class Settings(BaseSettings):
     ANTHROPIC_API_KEY: Optional[str] = None
     OPENAI_API_KEY: Optional[str] = None
     DEFAULT_LLM_MODEL: str = "claude"
+
+    # LLM Model Mappings (provider -> litellm model name)
+    LLM_MODEL_CLAUDE: str = "anthropic/claude-sonnet-4-20250514"
+    LLM_MODEL_CLAUDE_FAST: str = "anthropic/claude-3-5-haiku-20241022"
+
+    LLM_MODEL_OPENAI: str = "openai/gpt-4o"
+    LLM_MODEL_OPENAI_FAST: str = "openai/gpt-4o-mini"
+
+    LLM_MODEL_LOCAL: str = "ollama/llama3"
+
+    # Conversation defaults
+    CONVERSATION_DEFAULT_MODEL: str = "claude"
 
     # File Storage
     UPLOAD_DIR: str = "/tmp/biocloud/uploads"

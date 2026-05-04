@@ -17,17 +17,17 @@ class LLMProvider(str, Enum):
 class LLMRouter:
     """Router for multiple LLM providers using litellm"""
 
-    # Model mapping
+    # Model mapping (now from config)
     MODELS = {
-        LLMProvider.CLAUDE: "anthropic/claude-sonnet-4-20250514",
-        LLMProvider.OPENAI: "openai/gpt-4o",
-        LLMProvider.LOCAL: "ollama/llama3",
+        LLMProvider.CLAUDE: settings.LLM_MODEL_CLAUDE,
+        LLMProvider.OPENAI: settings.LLM_MODEL_OPENAI,
+        LLMProvider.LOCAL: settings.LLM_MODEL_LOCAL,
     }
 
-    # Fast models for intent detection
+    # Fast models for intent detection (now from config)
     FAST_MODELS = {
-        LLMProvider.CLAUDE: "anthropic/claude-3-5-haiku-20241022",
-        LLMProvider.OPENAI: "openai/gpt-4o-mini",
+        LLMProvider.CLAUDE: settings.LLM_MODEL_CLAUDE_FAST,
+        LLMProvider.OPENAI: settings.LLM_MODEL_OPENAI_FAST,
     }
 
     def __init__(self, default_provider: LLMProvider = LLMProvider.CLAUDE):

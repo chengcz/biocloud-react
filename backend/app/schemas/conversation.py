@@ -4,11 +4,13 @@ from pydantic import BaseModel, Field
 from typing import Optional, List
 from datetime import datetime
 
+from app.config import settings
+
 
 class ConversationBase(BaseModel):
     """Base conversation schema"""
     title: Optional[str] = Field(default="新对话", max_length=255)
-    model: Optional[str] = Field(default="claude", max_length=50)
+    model: Optional[str] = Field(default=settings.CONVERSATION_DEFAULT_MODEL, max_length=50)
 
 
 class ConversationCreate(ConversationBase):
