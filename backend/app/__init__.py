@@ -1,7 +1,7 @@
 """BioCloud Backend Application"""
 
 from .main import app, create_app
-from .config import settings
+from .settings import settings
 from .models import *
 from .schemas import *
 

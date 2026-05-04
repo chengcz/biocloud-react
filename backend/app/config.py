@@ -1,7 +1,13 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
+from os import getenv
 from pydantic_settings import BaseSettings
 from typing import Optional
 from functools import lru_cache
+from dotenv import load_dotenv
 
+load_dotenv()
 
 class Settings(BaseSettings):
     """Application settings loaded from environment variables"""
@@ -11,8 +17,17 @@ class Settings(BaseSettings):
     APP_VERSION: str = "1.0.0"
     DEBUG: bool = False
 
-    # Database
-    DATABASE_URL: str = "sqlite+aiosqlite:///./biocloud.db"
+
+    # Database connection settings
+    DB_HOST: getenv("DB_HOST", "localhost")
+    DB_PORT: getenv("DB_PORT", "5434")
+    DB_NAME: getenv("DB_NAME", "competitive_intelligence")
+    DB_USER: getenv("DB_USER", "postgres")
+    DB_PASSWORD: getenv("DB_PASSWORD", "postgres")
+
+    # Create database URL
+    DATABASE_URL: f"postgresql://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:{DB_PORT}/{DB_NAME}"
+
 
     # JWT Settings
     SECRET_KEY: str = "your-secret-key-change-in-production"
@@ -44,3 +59,4 @@ def get_settings() -> Settings:
 
 
 settings = get_settings()
+

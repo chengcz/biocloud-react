@@ -1,10 +1,52 @@
-from datetime import datetime
-from typing import Optional
-from sqlalchemy import String, DateTime, Integer
-from sqlalchemy.orm import Mapped, mapped_column
-from enum import Enum
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
 
-from app.config.database import Base
+from datetime import datetime
+from typing import Optional, AsyncGenerator
+
+from enum import Enum
+from sqlalchemy import String, DateTime, Integer
+from sqlalchemy.orm import Mapped, mapped_column, DeclarativeBase
+from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine, async_sessionmaker
+
+
+from app.config import settings
+
+
+
+# Create async engine (SQLite doesn't support pool_size)
+engine_args = {"echo": settings.DEBUG}
+if not settings.DATABASE_URL.startswith("sqlite"):
+    engine_args.update({"pool_size": 10, "max_overflow": 20})
+
+engine = create_async_engine(settings.DATABASE_URL, **engine_args)
+
+# Create async session factory
+AsyncSessionLocal = async_sessionmaker(
+    bind=engine,
+    class_=AsyncSession,
+    expire_on_commit=False,
+    autocommit=False,
+    autoflush=False,
+)
+
+
+class Base(DeclarativeBase):
+    """Base class for all SQLAlchemy models"""
+    pass
+
+
+async def get_db() -> AsyncGenerator[AsyncSession, None]:
+    """Dependency for getting async database sessions"""
+    async with AsyncSessionLocal() as session:
+        try:
+            yield session
+            await session.commit()
+        except Exception:
+            await session.rollback()
+            raise
+        finally:
+            await session.close()
 
 
 class DataScopeType(str, Enum):
