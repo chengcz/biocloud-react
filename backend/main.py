@@ -5,9 +5,9 @@ from fastapi.middleware.cors import CORSMiddleware
 from contextlib import asynccontextmanager
 import os
 
-from app.config import settings
-from app.api import api_router
-from app.models.base import engine, Base
+from api import api_router
+from config import settings
+from models.base import engine, Base
 
 
 @asynccontextmanager
@@ -62,4 +62,4 @@ app = create_app()
 
 if __name__ == "__main__":
     import uvicorn
-    uvicorn.run("app.main:app", host="0.0.0.0", port=8000, reload=True)
+    uvicorn.run("main:app", host="0.0.0.0", port=8000, reload=True)

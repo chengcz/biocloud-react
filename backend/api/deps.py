@@ -4,9 +4,8 @@ from typing import AsyncGenerator, Optional
 from fastapi import Depends, Query
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from app.core.security import get_current_user, get_current_active_user, CheckPermission
-from app.models import UserModel
-from app.models.base import get_db as get_db_session
+from core.security import get_current_user, get_current_active_user, CheckPermission
+from models.base import get_db as get_db_session
 
 
 async def get_db() -> AsyncGenerator[AsyncSession, None]:

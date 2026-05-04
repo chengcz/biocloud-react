@@ -4,7 +4,7 @@ from pydantic import BaseModel, Field
 from typing import Optional, List
 from datetime import datetime
 
-from app.config import settings
+from config import settings
 
 
 class ConversationBase(BaseModel):

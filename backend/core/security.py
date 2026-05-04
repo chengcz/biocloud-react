@@ -9,9 +9,9 @@ from fastapi.security import OAuth2PasswordBearer
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select
 
-from app.config import settings
-from app.models.base import get_db
-from app.models import UserModel
+from config import settings
+from models.base import get_db
+from models import UserModel
 
 # Password hashing context
 pwd_context = CryptContext(schemes=["argon2"], deprecated="auto")

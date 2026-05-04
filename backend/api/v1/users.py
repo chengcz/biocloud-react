@@ -5,9 +5,9 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select, func
 from typing import List
 
-from app.api.deps import get_db, get_current_user, PaginationParams, CheckPermission
-from app.models import UserModel, DeptModel, RoleModel, PermissionModel
-from app.schemas import (
+from api.deps import get_db, get_current_user, PaginationParams, CheckPermission
+from models import UserModel, DeptModel, RoleModel, PermissionModel
+from schemas import (
     UserCreate,
     UserUpdate,
     UserResponse,
@@ -21,8 +21,8 @@ from app.schemas import (
     RoleResponse,
     PermissionResponse,
 )
-from app.core.security import get_password_hash
-from app.core.exceptions import NotFoundException, ConflictException
+from core.security import get_password_hash
+from core.exceptions import NotFoundException, ConflictException
 
 router = APIRouter(prefix="/users", tags=["User Management"])
 

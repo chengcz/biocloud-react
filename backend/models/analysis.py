@@ -4,7 +4,7 @@ from sqlalchemy import String, DateTime, ForeignKey, Integer, Text, JSON, Enum a
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from enum import Enum
 
-from app.models.base import BaseModel
+from .base import BaseModel
 
 
 class AnalysisStatus(str, Enum):

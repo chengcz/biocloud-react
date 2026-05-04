@@ -9,9 +9,9 @@ from datetime import datetime
 from typing import List
 import json
 
-from app.api.deps import get_db, get_current_user, PaginationParams
-from app.models import UserModel, ConversationModel, MessageModel, MessageRole
-from app.schemas.conversation import (
+from api.deps import get_db, get_current_user, PaginationParams
+from models import UserModel, ConversationModel, MessageModel, MessageRole
+from schemas.conversation import (
     ConversationCreate,
     ConversationUpdate,
     ConversationResponse,
@@ -19,7 +19,7 @@ from app.schemas.conversation import (
     MessageCreate,
     MessageResponse,
 )
-from app.services.llm import generate_chat_with_tools
+from services.llm import generate_chat_with_tools
 
 router = APIRouter(prefix="/conversations", tags=["Conversations"])
 

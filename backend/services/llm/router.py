@@ -4,7 +4,7 @@ from typing import Optional, AsyncGenerator, List, Dict, Any
 from enum import Enum
 from litellm import acompletion
 
-from app.config import settings
+from config import settings
 
 
 class LLMProvider(str, Enum):

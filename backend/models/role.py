@@ -2,11 +2,11 @@ from typing import TYPE_CHECKING
 from sqlalchemy import String, Integer, ForeignKey, Boolean, Table, Column, Enum as SQLEnum
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
-from app.models.base import BaseModel, DataScopeType
+from models.base import BaseModel, DataScopeType
 
 if TYPE_CHECKING:
-    from app.models.user import UserModel
-    from app.models.dept import DeptModel
+    from models.user import UserModel
+    from models.dept import DeptModel
 
 
 # 角色-权限 关联表

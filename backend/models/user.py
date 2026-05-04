@@ -3,11 +3,11 @@ from datetime import datetime
 from sqlalchemy import String, DateTime, ForeignKey, Integer, Boolean, event
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
-from app.models.base import BaseModel
+from models.base import BaseModel
 
 if TYPE_CHECKING:
-    from app.models.dept import DeptModel
-    from app.models.role import RoleModel
+    from models.dept import DeptModel
+    from models.role import RoleModel
 
 
 # 岗位表

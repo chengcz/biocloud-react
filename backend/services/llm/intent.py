@@ -5,8 +5,8 @@ from enum import Enum
 from pydantic import BaseModel
 import json
 
-from app.services.llm.router import llm_router, LLMProvider
-from app.services.analysis import ToolRegistry
+from services.llm.router import llm_router, LLMProvider
+from services.analysis import ToolRegistry
 
 
 class UserIntent(str, Enum):

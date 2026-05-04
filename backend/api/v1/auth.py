@@ -6,9 +6,9 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select
 from datetime import datetime
 
-from app.api.deps import get_db, get_current_user
-from app.models import UserModel
-from app.schemas import (
+from api.deps import get_db, get_current_user
+from models import UserModel
+from schemas import (
     LoginRequest,
     RegisterRequest,
     TokenResponse,
@@ -16,15 +16,15 @@ from app.schemas import (
     PasswordChangeRequest,
     UserResponse,
 )
-from app.core.security import (
+from core.security import (
     verify_password,
     get_password_hash,
     create_access_token,
     create_refresh_token,
     decode_token,
 )
-from app.core.exceptions import BadRequestException, UnauthorizedException, ConflictException
-from app.config import settings
+from core.exceptions import BadRequestException, UnauthorizedException, ConflictException
+from config import settings
 
 router = APIRouter(prefix="/auth", tags=["Authentication"])
 

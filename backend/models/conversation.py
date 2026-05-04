@@ -4,8 +4,8 @@ from sqlalchemy import String, DateTime, ForeignKey, Integer, Text, JSON, Enum a
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from enum import Enum
 
-from app.config import settings
-from app.models.base import BaseModel
+from config import settings
+from models.base import BaseModel
 
 
 class MessageRole(str, Enum):
