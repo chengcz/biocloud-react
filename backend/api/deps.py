@@ -1,7 +1,7 @@
 """API dependencies for dependency injection"""
 
-from typing import AsyncGenerator, Optional
-from fastapi import Depends, Query
+from typing import AsyncGenerator
+from fastapi import Query
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from core.security import get_current_user, get_current_active_user, CheckPermission

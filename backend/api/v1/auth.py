@@ -1,10 +1,9 @@
 """Authentication API endpoints"""
 
-from fastapi import APIRouter, Depends, HTTPException, status
-from fastapi.security import OAuth2PasswordRequestForm
+from fastapi import APIRouter, Depends, status
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select
-from datetime import datetime
+from datetime import datetime, timezone
 
 from api.deps import get_db, get_current_user
 from models import UserModel
@@ -51,7 +50,7 @@ async def login(
         raise BadRequestException("User account is disabled")
 
     # Update login info
-    user.login_date = datetime.utcnow()
+    user.login_date = datetime.now(timezone.utc)
     # Note: In production, get real IP from request
     # user.login_ip = request.client.host
 

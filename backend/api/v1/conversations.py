@@ -5,11 +5,12 @@ from fastapi.responses import StreamingResponse
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select
 from sqlalchemy.orm import selectinload
-from datetime import datetime
+from datetime import datetime, timezone
 from typing import List
 import json
+import logging
 
-from api.deps import get_db, get_current_user, PaginationParams
+from api.deps import get_db, get_current_user
 from models import UserModel, ConversationModel, MessageModel, MessageRole
 from schemas.conversation import (
     ConversationCreate,
@@ -17,11 +18,11 @@ from schemas.conversation import (
     ConversationResponse,
     ConversationListResponse,
     MessageCreate,
-    MessageResponse,
 )
 from services.llm import generate_chat_with_tools
 
 router = APIRouter(prefix="/conversations", tags=["Conversations"])
+logger = logging.getLogger(__name__)
 
 
 @router.get("", response_model=List[ConversationListResponse])
@@ -190,7 +191,7 @@ async def send_message(
     await db.commit()
 
     # Update conversation timestamp
-    conversation.last_message_at = datetime.utcnow()
+    conversation.last_message_at = datetime.now(timezone.utc)
 
     # Get conversation history
     messages = [
@@ -201,16 +202,17 @@ async def send_message(
 
     async def generate():
         """Generate streaming response"""
-        assistant_content = ""
+        chunks = []
 
         try:
             # Stream response from LLM
             async for chunk in generate_chat_with_tools(messages, model=conversation.model):
-                assistant_content += chunk
+                chunks.append(chunk)
                 # SSE format
                 yield f"data: {json.dumps({'content': chunk})}\n\n"
 
             # Save assistant message
+            assistant_content = "".join(chunks)
             assistant_message = MessageModel(
                 conversation_id=conversation_id,
                 role=MessageRole.ASSISTANT,
@@ -223,6 +225,7 @@ async def send_message(
             yield "data: [DONE]\n\n"
 
         except Exception as e:
+            logger.exception("LLM streaming error in conversation %d", conversation_id)
             yield f"data: {json.dumps({'error': str(e)})}\n\n"
 
     return StreamingResponse(

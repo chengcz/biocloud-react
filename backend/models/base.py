@@ -1,16 +1,18 @@
-#!/usr/bin/env python
-# -*- coding: utf-8 -*-
+"""Base database models and session management"""
 
 from datetime import datetime
 from typing import Optional, AsyncGenerator
+import logging
 
 from enum import Enum
 from sqlalchemy import String, DateTime, Integer
 from sqlalchemy.orm import Mapped, mapped_column, DeclarativeBase
 from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine, async_sessionmaker
-
+from sqlalchemy.exc import SQLAlchemyError
 
 from config import settings
+
+logger = logging.getLogger(__name__)
 
 
 
@@ -42,7 +44,8 @@ async def get_db() -> AsyncGenerator[AsyncSession, None]:
         try:
             yield session
             await session.commit()
-        except Exception:
+        except SQLAlchemyError as e:
+            logger.exception("Database error: %s", e)
             await session.rollback()
             raise
         finally:

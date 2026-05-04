@@ -1,10 +1,14 @@
 from datetime import datetime
-from typing import Optional
+from typing import Optional, TYPE_CHECKING
 from sqlalchemy import String, DateTime, ForeignKey, Integer, Text, JSON, Enum as SQLEnum
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from enum import Enum
 
 from .base import BaseModel
+
+if TYPE_CHECKING:
+    from models.user import UserModel
+    from models.conversation import ConversationModel
 
 
 class AnalysisStatus(str, Enum):

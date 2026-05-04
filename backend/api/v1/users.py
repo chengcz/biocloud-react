@@ -19,7 +19,6 @@ from schemas import (
     RoleCreate,
     RoleUpdate,
     RoleResponse,
-    PermissionResponse,
 )
 from core.security import get_password_hash
 from core.exceptions import NotFoundException, ConflictException
@@ -32,8 +31,8 @@ router = APIRouter(prefix="/users", tags=["User Management"])
 @router.get("", response_model=dict)
 async def list_users(
     pagination: PaginationParams = Depends(),
-    dept_id: int = None,
-    status: str = None,
+    dept_id: int | None = None,
+    status: str | None = None,
     current_user: UserModel = Depends(get_current_user),
     db: AsyncSession = Depends(get_db)
 ):
@@ -194,21 +193,21 @@ async def list_departments(
     )
     departments = result.scalars().all()
 
+    # Get user counts for all departments in single query (fix N+1)
+    count_result = await db.execute(
+        select(UserModel.dept_id, func.count())
+        .where(UserModel.del_flag == "0")
+        .group_by(UserModel.dept_id)
+    )
+    user_counts = dict(count_result.all())
+
     # Build tree
     dept_map = {d.id: DeptTreeResponse.model_validate(d) for d in departments}
     roots = []
 
     for dept in departments:
         dept_response = dept_map[dept.id]
-
-        # Count users in this department
-        count_result = await db.execute(
-            select(func.count()).where(
-                UserModel.dept_id == dept.id,
-                UserModel.del_flag == "0"
-            )
-        )
-        dept_response.user_count = count_result.scalar() or 0
+        dept_response.user_count = user_counts.get(dept.id, 0)
 
         if dept.parent_id is None:
             roots.append(dept_response)

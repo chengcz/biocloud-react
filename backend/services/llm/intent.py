@@ -1,6 +1,6 @@
 """Intent detection and tool calling for user queries"""
 
-from typing import Optional, Dict, Any, List
+from typing import Optional, Dict, Any
 from enum import Enum
 from pydantic import BaseModel
 import json

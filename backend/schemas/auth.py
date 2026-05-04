@@ -36,6 +36,11 @@ class PasswordChangeRequest(BaseModel):
     """Password change request schema"""
     old_password: str
     new_password: str = Field(..., min_length=6, max_length=100)
+    confirm_password: str = Field(..., min_length=6, max_length=100)
+
+    def model_post_init(self, __context):
+        if self.new_password != self.confirm_password:
+            raise ValueError("new_password and confirm_password must match")
 
 
 class PasswordResetRequest(BaseModel):

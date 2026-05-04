@@ -87,5 +87,5 @@ class IntentResult(BaseModel):
     """Intent detection result"""
     intent: str
     confidence: float
-    parameters: dict = {}
+    parameters: dict = Field(default_factory=dict)
     analysis_type: Optional[str] = None

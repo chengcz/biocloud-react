@@ -1,6 +1,3 @@
-#!/usr/bin/env python
-# -*- coding: utf-8 -*-
-
 from os import getenv
 from pydantic_settings import BaseSettings
 from typing import Optional
@@ -17,7 +14,6 @@ class Settings(BaseSettings):
     APP_VERSION: str = "1.0.0"
     DEBUG: bool = False
 
-
     # Database connection settings
     DB_HOST: str = getenv("DB_HOST", "localhost")
     DB_PORT: str = getenv("DB_PORT", "5434")
@@ -31,9 +27,8 @@ class Settings(BaseSettings):
         """Compute database URL from connection settings (async driver)"""
         return f"postgresql+asyncpg://{self.DB_USER}:{self.DB_PASSWORD}@{self.DB_HOST}:{self.DB_PORT}/{self.DB_NAME}"
 
-
-    # JWT Settings
-    SECRET_KEY: str = "your-secret-key-change-in-production"
+    # JWT Settings - SECRET_KEY must be set via environment variable
+    SECRET_KEY: str = getenv("SECRET_KEY", "")
     ALGORITHM: str = "HS256"
     ACCESS_TOKEN_EXPIRE_MINUTES: int = 30
     REFRESH_TOKEN_EXPIRE_DAYS: int = 7
@@ -61,6 +56,11 @@ class Settings(BaseSettings):
 
     # CORS
     CORS_ORIGINS: list[str] = ["http://localhost:5173", "http://127.0.0.1:5173"]
+
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        if not self.SECRET_KEY:
+            raise ValueError("SECRET_KEY environment variable must be set")
 
     class Config:
         env_file = ".env"

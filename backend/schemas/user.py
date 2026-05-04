@@ -20,7 +20,7 @@ class UserCreate(UserBase):
     dept_id: Optional[int] = None
     post_id: Optional[int] = None
     leader_id: Optional[int] = None
-    role_ids: List[int] = []
+    role_ids: List[int] = Field(default_factory=list)
 
 
 class UserUpdate(BaseModel):
@@ -64,7 +64,7 @@ class UserDetailResponse(UserResponse):
     dept: Optional["DeptBrief"] = None
     post: Optional["PostBrief"] = None
     leader: Optional["UserBrief"] = None
-    roles: List["RoleBrief"] = []
+    roles: List["RoleBrief"] = Field(default_factory=list)
 
 
 class UserBrief(BaseModel):
@@ -124,7 +124,7 @@ class DeptResponse(DeptBrief):
 
 class DeptTreeResponse(DeptResponse):
     """Department tree response with children"""
-    children: List["DeptTreeResponse"] = []
+    children: List["DeptTreeResponse"] = Field(default_factory=list)
     leader: Optional[UserBrief] = None
     user_count: int = 0
 
